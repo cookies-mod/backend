@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: backend
+  autoconfigure:
+    exclude:
+     - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+backend:
+  version: $VERSION
+  service: ${SERVICE_NAME}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    database: postgresql
+  datasource:
+    username: dev
+    password: dev
+    url: jdbc:postgresql://localhost:5432/
+  data:
+    redis:
+      host: localhost
+  rabbitmq:
+    username: dev
+    password: dev
+
+backend:
+  auth:
+    sign: DEVKEY-dgjijasbhdgjhbasdjhufgasdogjaiuebguwebjubsjdhbfuiweagfiuwhjgbadjksbfjhawerhiohwaeiugvh aeiuz
