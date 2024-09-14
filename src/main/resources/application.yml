@@ -3,13 +3,12 @@ spring:
     name: backend
   autoconfigure:
     exclude:
-     - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   jpa:
     hibernate:
       ddl-auto: create-drop
 
 backend:
-  version: $VERSION
   service: ${SERVICE_NAME}
 
 ---
@@ -33,3 +32,27 @@ spring:
 backend:
   auth:
     sign: DEVKEY-dgjijasbhdgjhbasdjhufgasdogjaiuebguwebjubsjdhbfuiweagfiuwhjgbadjksbfjhawerhiohwaeiugvh aeiuz
+---
+spring:
+  config:
+    import: "optional:file:config.yml"
+    activate:
+      on-profile: prod
+  jpa:
+    database: postgresql
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD}
+      username: ${REDIS_USERNAME}
+  rabbitmq:
+    username: ${RABBIT_MQ_USERNAME}
+    password: ${RABBIT_MQ_PASSWORD}
+backend:
+  auth:
+    sign: ${BACKEND_SIGN_KEY}
+
