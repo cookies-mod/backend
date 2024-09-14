@@ -5,7 +5,6 @@ import dev.morazzer.cookies.backend.services.MessageConfig;
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.PacketSerializer;
 import dev.morazzer.cookies.entities.websocket.Side;
-import dev.morazzer.cookies.entities.websocket.c2s.DungeonMimicKilledPacket;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Collections;
@@ -35,26 +34,18 @@ public class SocketHandler implements WebSocketHandler {
     }
 
     public static void sendToAllWithScope(Packet<?> packet, String scope) {
-        try {
-            byte[] serialized = Side.PACKETS.serializeUnknown(packet);
-            for (PlayerConnection session : sessions) {
-                if (session.isInScope(scope)) {
-                    session.sendPacket(serialized);
-                }
+        byte[] serialized = Side.PACKETS.serializeUnknown(packet);
+        for (PlayerConnection session : sessions) {
+            if (session.isInScope(scope)) {
+                session.sendPacket(serialized);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public static void sendToAll_DO_NOT_USE(Packet<?> packet) {
-        try {
-            byte[] serialized = Side.PACKETS.serializeUnknown(packet);
-            for (PlayerConnection session : sessions) {
-                session.sendPacket(serialized);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        byte[] serialized = Side.PACKETS.serializeUnknown(packet);
+        for (PlayerConnection session : sessions) {
+            session.sendPacket(serialized);
         }
     }
 
@@ -119,6 +110,11 @@ public class SocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull CloseStatus closeStatus) {
+        for (PlayerConnection playerConnection : sessions) {
+            if (playerConnection.equals(session)) {
+                playerConnection.remove();
+            }
+        }
         sessions.removeIf(player -> player.equals(session));
     }
 

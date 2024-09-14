@@ -2,6 +2,8 @@ package dev.morazzer.cookies.backend.services;
 
 import com.nimbusds.jose.shaded.gson.Gson;
 import dev.morazzer.cookies.backend.entities.other.MinecraftUser;
+import dev.morazzer.cookies.backend.utils.redis.UUIDKey;
+import dev.morazzer.cookies.backend.utils.redis.UsernameKey;
 import dev.morazzer.cookies.entities.request.AuthRequest;
 import java.io.IOException;
 import java.net.URI;
@@ -38,7 +40,9 @@ public class MojangAuthService {
                 MinecraftUser user = gson.fromJson(response.replaceAll(
                     "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
                     "$1-$2-$3-$4-$5"), MinecraftUser.class);
-                return Optional.ofNullable(user);
+                MinecraftRedisService.INSTANCE.write(new UsernameKey(user.uuid()), username);
+                MinecraftRedisService.INSTANCE.write(new UUIDKey(username), user.uuid());
+                return Optional.of(user);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -46,4 +50,5 @@ public class MojangAuthService {
 
         return Optional.empty();
     }
+
 }

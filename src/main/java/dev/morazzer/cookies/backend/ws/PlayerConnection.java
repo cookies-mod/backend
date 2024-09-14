@@ -1,5 +1,8 @@
 package dev.morazzer.cookies.backend.ws;
 
+import dev.morazzer.cookies.backend.BackendApplication;
+import dev.morazzer.cookies.backend.services.BackendRedisService;
+import dev.morazzer.cookies.backend.utils.redis.PlayerKey;
 import dev.morazzer.cookies.entities.websocket.Packet;
 import dev.morazzer.cookies.entities.websocket.Side;
 import java.io.IOException;
@@ -28,6 +31,7 @@ public final class PlayerConnection {
         this.scopes = scopes;
         this.connection = connection;
         this.playerListener = new PlayerListener(this);
+        BackendRedisService.INSTANCE.write(new PlayerKey(this.uuid), true);
     }
 
     public boolean isInScope(String scope) {
@@ -60,20 +64,12 @@ public final class PlayerConnection {
     public WebSocketSession connection() {return connection;}
 
     public void sendPacket(Packet<?> packet) {
-        try {
-            sendPacket(Side.PACKETS.serializeUnknown(packet));
-        } catch (IOException e) {
-            try {
-                connection.close(CloseStatus.SERVER_ERROR);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        sendPacket(Side.PACKETS.serializeUnknown(packet));
     }
 
     public void sendPacket(byte[] bytes) {
         try {
-            connection.sendMessage(new BinaryMessage(bytes));
+            connection.sendMessage(new BinaryMessage(bytes, true));
         } catch (IOException e) {
             e.printStackTrace();
             try {
@@ -101,10 +97,15 @@ public final class PlayerConnection {
 
     public void setDungeonSession(String formatted) {
         final String dungeonSession = "dungeons.session." + formatted;
+        System.out.println("Setting dungeon session: " + dungeonSession);
         this.scopes.add(dungeonSession);
     }
 
     public void removeScope(String scope) {;
         this.scopes.remove(scope);
+    }
+
+    public void remove() {
+        BackendRedisService.INSTANCE.clear(new PlayerKey(this.uuid));
     }
 }
