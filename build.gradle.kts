@@ -3,11 +3,11 @@ plugins {
     id("org.springframework.boot").version("3.3.3")
     id("io.spring.dependency-management").version("1.1.6")
     kotlin("jvm")
-    `cookies-backend-changelog`
+    `cookies-get-version`
 }
 
 group = "dev.morazzer.cookies"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
     toolchain {
@@ -21,10 +21,9 @@ configurations.compileOnly {
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven("https://maven.pkg.github.com/cookies-mod/entities") {
         credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+            username = ""
             password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
         }
     }
@@ -57,7 +56,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-amqp")
 
     // Communication with client
-    implementation("dev.morazzer.cookies:entities:0.0.1")
+    implementation("dev.morazzer.cookies:entities:0.2.0")
 
     // Lombok (not much to say)
     compileOnly("org.projectlombok:lombok")
@@ -73,4 +72,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+springBoot {
+    buildInfo()
 }

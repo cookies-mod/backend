@@ -1,3 +1,3 @@
-# $VERSION$
+# v$VERSION$
 
 ## Changes
