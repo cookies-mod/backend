@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - v**
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -22,8 +23,8 @@ jobs:
           chmod +x ./gradlew
       - name: Build
         env:
-          USERNAME: ${{ secrets.USER }}
-          TOKEN: ${{ secrets.TOKEN }}
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test bootJar version
       - name: Get version
         id: version
