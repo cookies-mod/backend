@@ -3,11 +3,12 @@ on:
   push:
     tags:
       - v**
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
   publish:
-    name: Publish Entities
+    name: Publish Backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,8 +23,8 @@ jobs:
           chmod +x ./gradlew
       - name: Build
         env:
-          USERNAME: ${{ secrets.USER }}
-          TOKEN: ${{ secrets.TOKEN }}
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test bootJar version
       - name: Get version
         id: version
