@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.morazzer.cookies"
-version = "0.0.3"
+version = "0.0.4"
 
 java {
     toolchain {
