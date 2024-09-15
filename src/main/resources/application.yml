@@ -53,6 +53,9 @@ spring:
     username: ${RABBIT_MQ_USERNAME}
     password: ${RABBIT_MQ_PASSWORD}
     host: ${RABBIT_MQ_HOST}
+  mvc:
+    servlet:
+      path: ${API_PATH}
 backend:
   auth:
     sign: ${BACKEND_SIGN_KEY}

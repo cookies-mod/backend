@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers("/login", "/auth").permitAll();
+            request.requestMatchers("/login", "/auth", "/health", "/error").permitAll();
             request.anyRequest().authenticated();
         }).csrf(CsrfConfigurer::disable).addFilterBefore(bearerTokenAuthFilter, BasicAuthenticationFilter.class);
         return http.build();
