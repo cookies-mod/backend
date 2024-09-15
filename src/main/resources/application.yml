@@ -52,6 +52,7 @@ spring:
   rabbitmq:
     username: ${RABBIT_MQ_USERNAME}
     password: ${RABBIT_MQ_PASSWORD}
+    host: ${RABBIT_MQ_HOST}
 backend:
   auth:
     sign: ${BACKEND_SIGN_KEY}
