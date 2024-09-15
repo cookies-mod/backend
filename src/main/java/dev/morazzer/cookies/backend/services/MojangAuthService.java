@@ -4,17 +4,11 @@ import com.nimbusds.jose.shaded.gson.Gson;
 import dev.morazzer.cookies.backend.entities.other.MinecraftUser;
 import dev.morazzer.cookies.backend.utils.redis.UUIDKey;
 import dev.morazzer.cookies.backend.utils.redis.UsernameKey;
-import dev.morazzer.cookies.entities.request.AuthRequest;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import javax.swing.text.html.Option;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MojangAuthService {
@@ -44,7 +38,8 @@ public class MojangAuthService {
                 MinecraftRedisService.INSTANCE.write(new UUIDKey(username), user.uuid());
                 return Optional.of(user);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
