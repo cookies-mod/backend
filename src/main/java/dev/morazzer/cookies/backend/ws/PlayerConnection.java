@@ -1,6 +1,5 @@
 package dev.morazzer.cookies.backend.ws;
 
-import dev.morazzer.cookies.backend.BackendApplication;
 import dev.morazzer.cookies.backend.services.BackendRedisService;
 import dev.morazzer.cookies.backend.utils.redis.PlayerKey;
 import dev.morazzer.cookies.entities.websocket.Packet;
@@ -97,11 +96,10 @@ public final class PlayerConnection {
 
     public void setDungeonSession(String formatted) {
         final String dungeonSession = "dungeons.session." + formatted;
-        System.out.println("Setting dungeon session: " + dungeonSession);
         this.scopes.add(dungeonSession);
     }
 
-    public void removeScope(String scope) {;
+    public void removeScope(String scope) {
         this.scopes.remove(scope);
     }
 
