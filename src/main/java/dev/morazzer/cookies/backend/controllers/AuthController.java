@@ -24,7 +24,13 @@ public class AuthController {
     @PostMapping({"login", "auth"})
     public AuthResponse auth(@RequestBody AuthRequest authRequest, HttpServletRequest req, @RequestHeader("User-Agent") String userAgent) {
         try {
-            return authService.createToken(userAgent, authRequest, req.getRemoteAddr());
+            final String ip;
+            if (req.getHeader("X-Forwarded-For") != null) {
+                ip = req.getHeader("X-Forwarded-For");
+            } else {
+                ip = req.getRemoteAddr();
+            }
+            return authService.createToken(userAgent, authRequest, ip);
         } catch (InvalidCredentialsException ignored) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Couldn't authorize");
         } catch (Exception e) {

@@ -19,11 +19,6 @@ public class MojangAuthService {
     public Optional<MinecraftUser> isAuthenticated(String sharedSecret, String username, String ip) {
         String request = BASE_URL + "?username=%s&serverId=%s&ip=%s".formatted(username, sharedSecret, ip);
         try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        try {
             final URLConnection connection = URI.create(request).toURL().openConnection();
             connection.connect();
             connection.setReadTimeout(100);
