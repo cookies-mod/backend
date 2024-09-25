@@ -95,6 +95,7 @@ public final class PlayerConnection {
     }
 
     public void setDungeonSession(String formatted) {
+        this.getDungeonSession().ifPresent(this::removeScope);
         final String dungeonSession = "dungeons.session." + formatted;
         this.scopes.add(dungeonSession);
     }
